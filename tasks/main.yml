@@ -1,0 +1,57 @@
+---
+- name: Install Debian packages
+  apt:
+    name: "{%- if  item.Debian is defined
+               and item.Debian.name is defined %}
+           {{-     item.Debian.name }}
+           {%- else %}
+           {{-     item.name }}
+           {%- endif %}"
+    update_cache: yes
+    cache_valid_time: 86400
+    state: present
+    install_recommends: no
+  with_items: packages
+  when: ansible_distribution == 'Debian' and
+        not ( item.Debian is defined and
+              item.Debian.versions is defined and
+              ansible_distribution_major_version not in item.Debian.versions) and
+        not ( item.Debian is defined and
+              item.Debian.disabled|default(False) )
+
+- name: Install Ubuntu packages
+  apt:
+    name: "{%- if  item.Ubuntu is defined
+               and item.Ubuntu.name is defined %}
+           {{-     item.Ubuntu.name }}
+           {%- else %}
+           {{-     item.name }}
+           {%- endif %}"
+    update_cache: yes
+    cache_valid_time: 86400
+    state: present
+    install_recommends: no
+  with_items: packages
+  when: ansible_distribution == 'Ubuntu' and
+        not ( item.Ubuntu is defined and
+              item.Ubuntu.versions is defined and
+              ansible_distribution_major_version not in item.Ubuntu.versions) and
+        not ( item.Ubuntu is defined and
+              item.Ubuntu.disabled|default(False) )
+
+- name: Install CentOS packages
+  yum:
+    name: "{%- if  item.CentOS is defined
+               and item.CentOS.name is defined %}
+           {{-     item.CentOS.name }}
+           {%- else %}
+           {{-     item.name }}
+           {%- endif %}"
+    state: present
+  with_items: packages
+  when: ansible_distribution == 'CentOS' and
+        not ( item.CentOS is defined and
+              item.CentOS.versions is defined and
+              ansible_distribution_major_version not in item.CentOS.versions) and
+        not ( item.CentOS is defined and
+              item.CentOS.disabled|default(False) )

@@ -1,0 +1,3 @@
+---
+- name: enable uptimed
+  service: name=uptimed enabled=yes state=started
