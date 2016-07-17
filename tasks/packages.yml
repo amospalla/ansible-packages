@@ -15,7 +15,7 @@
     cache_valid_time: 86400
     state: present
     install_recommends: no
-  with_items: packages
+  with_items: '{{ packages }}'
   when: ansible_distribution in ['Debian','Ubuntu'] and
         not ( item[ansible_distribution] is defined and
               item[ansible_distribution]['version'] is defined and
@@ -32,7 +32,7 @@
            {{-     item.name }}
            {%- endif %}"
     state: present
-  with_items: packages
+  with_items: '{{ packages }}'
   when: ansible_distribution == 'CentOS' and
         not ( item.CentOS is defined and
               item.CentOS.version is defined and
