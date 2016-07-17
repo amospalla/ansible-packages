@@ -1,46 +1,22 @@
 ---
-# +------------------------+--------+--------------+--------------+--------------+
-# |                        |        |    Ubuntu    |     Debian   |     CentOS   |
-# | Package                | Enable | 10   12   14 |  6    7    8 |  5    6    7 |
-# +------------------------+--------+----+----+----+----+----+----+----+----+----+
-# | dialog                 |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  ? |  ? |  ? |
-# | hddtemp                |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep |  N |
-# | uptimed                |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  N |  N |  N |
-# | aptitude               |      Y |  Y |  Y |  Y |  Y |  Y |  Y | NA | NA | NA |
-# | sysv-rc-conf           |      Y |  Y |  Y |  Y |  Y |  Y |  Y | NA | NA | NA |
-# | logrotate ?            |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep |  Y |
-# | tmux                   |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | sudo                   |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | bind9utils             |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | ncurses-term           |      Y |  Y |  Y |  Y |  Y |  Y |  Y |    |  Y |  Y |
-# | dstat                  |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | pigz                   |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep |  Y |
-# | lzop                   |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep |  Y | ep |
-# | bash-completion        |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep |  Y |
-# | psmisc                 |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | iotop                  |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | atop                   |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep | ep |
-# | pv                     |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep | ep |
-# | ncdu                   |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep | ep |
-# | rsync                  |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | wget                   |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | dnstracer              |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep | ep |
-# | inotify-tools          |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep | ep |
-# | mc                     |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | html2text              |        |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep | ep |
-# | iftop                  |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep | ep |
-# | iperf                  |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep | ep |
-# | sipcalc                |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep | ep |
-# | bwm-ng                 |      Y |  Y |  Y |  Y |  Y |  Y |  Y | ep | ep |  N |
-# | vim                    |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | keychain               |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  N |  N |  N |
-# | sqlite3                |      Y |  Y |  Y |  Y |  Y |  Y |  Y | NA | NA | NA |
-# | mtr                    |      Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | mosh                   |        |    |  Y |  Y |    |  Y |  Y | ep | ep | ep |
-# | dos2unix               |        |    |  Y |  Y |  Y |  Y |  Y |  Y |  Y |  Y |
-# | task-spooler           |        |    |    |  Y |    |  Y |  Y |  N |  N |  N |
+packages_ansible_distribution:
+  Debian:
+    - 7
+    - 8
+  Ubuntu:
+    - 12
+    - 14
+    - 16
+  CentOS:
+    - 5
+    - 6
+    - 7
 
 packages:
+  - name: mbuffer
+    CentOS:
+      disabled: True
+      version: [5]
   - name: dialog
     CentOS:
       disabled: True
@@ -62,14 +38,14 @@ packages:
   - name: wget
   - name: dnstracer
     CentOS:
-      versions: ['5', '6']
+      version: [5, 6]
   - name: inotify-tools
   - name: mc
   - name: iftop
   - name: iperf
   - name: sipcalc
     CentOS:
-      versions: ['5', '6']
+      version: [5, 6]
   - name: mtr
     Debian:
       name: mtr-tiny
@@ -83,19 +59,19 @@ packages:
       name: vim-enhanced
   - name: mosh
     Debian:
-      versions: ['7', '8']
+      version: [7, 8]
     Ubuntu:
-      versions: ['12', '14']
+      version: [12, 14, 16]
   - name: dos2unix
     Ubuntu:
-      versions: ['12', '14']
+      version: [12, 14, 16]
   - name: hddtemp
   - name: bwm-ng
     CentOS:
-      versions: ['6', '7']
+      version: [6, 7]
   - name: ncurses-term
     CentOS:
-      versions: ['6', '7']
+      version: [6, 7]
   - name: aptitude
     CentOS:
       disabled: True
@@ -104,14 +80,26 @@ packages:
       disabled: True
   - name: keychain
     CentOS:
-      versions: ['6', '7']
+      disabled: True
   - name: sqlite3
     CentOS:
       disabled: True
   - name: task-spooler
     Ubuntu:
-      versions: ['14']
+      version: [14, 16]
     Debian:
-      versions: ['7', '8']
+      version: [7, 8]
     CentOS:
       disabled: True
+  - name: cron
+    CentOS:
+      version: [5]
+      name: vixie-cron
+  - name: cronie
+    Debian:
+      disabled: True
+    Ubuntu:
+      disabled: True
+    CentOS:
+      version: [6, 7]
+  - name: sysstat
