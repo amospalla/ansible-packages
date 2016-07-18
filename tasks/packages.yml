@@ -1,41 +1,36 @@
 ---
-# example: name: if item.Debian.name is defined show it, if not show item.name
-# example: when: ansible_distribution in Debian or Ubuntu and
-#                ( not exists item.Debian.version and ansible_distribution_major_version in it) and
-#                ( not exists item.Debian.disabled and its True)
-- name: Install Apt packages
-  apt:
-    name: "{%- if  item[ansible_distribution] is defined
-               and item[ansible_distribution].name is defined %}
-           {{-     item[ansible_distribution].name }}
-           {%- else %}
-           {{-     item.name }}
-           {%- endif %}"
-    update_cache: yes
-    cache_valid_time: 86400
-    state: present
-    install_recommends: no
+- name: Init empty packages list
+  set_fact:
+    packages_list: '{{ []  }}'
+
+- name: Append package to packages list
+  set_fact:
+    packages_list: "{%- if  item[ansible_distribution] is defined
+                        and item[ansible_distribution].name is defined %}
+                    {{-     packages_list + [item[ansible_distribution].name] }}
+                    {%- else %}
+                    {{-     packages_list + [item.name] }}
+                    {%- endif %}"
   with_items: '{{ packages }}'
-  when: ansible_distribution in ['Debian','Ubuntu'] and
-        not ( item[ansible_distribution] is defined and
+  when: not ( item[ansible_distribution] is defined and
               item[ansible_distribution]['version'] is defined and
               ansible_distribution_major_version not in item[ansible_distribution]['version'] ) and
         not ( item[ansible_distribution] is defined and
               item[ansible_distribution]['disabled']|default(False) )
 
-- name: Install CentOS packages
-  yum:
-    name: "{%- if  item.CentOS is defined
-               and item.CentOS.name is defined %}
-           {{-     item.CentOS.name }}
-           {%- else %}
-           {{-     item.name }}
-           {%- endif %}"
+- name: Install Apt packages
+  apt:
+    name: '{{ item }}'
+    update_cache: yes
+    cache_valid_time: 86400
     state: present
-  with_items: '{{ packages }}'
-  when: ansible_distribution == 'CentOS' and
-        not ( item.CentOS is defined and
-              item.CentOS.version is defined and
-              ansible_distribution_major_version not in item.CentOS.version) and
-        not ( item.CentOS is defined and
-              item.CentOS.disabled|default(False) )
+    install_recommends: no
+  with_items: '{{ packages_list }}'
+  when: ansible_os_family == 'Debian'
+
+- name: Install RedHat packages
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items: '{{ packages_list }}'
+  when: ansible_os_family == 'RedHat'
